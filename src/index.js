@@ -32,6 +32,8 @@ class Board extends React.Component {
 
     let winner = computeTicTacToeBoardWinner(squaresShallowCopy);
 
+    console.log(winner)
+
     this.setState({ 
       squares: squaresShallowCopy,
       xIsNext: !this.state.xIsNext,
@@ -47,12 +49,12 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = "";
+    let status = "";
 
     if(this.state.winner) {
       status = `And the winner is : ${ this.state.winner }`;
     } else {
-     `Next player: ${ this.state.xIsNext ? "X" : "O" }`;
+      status = `Next player: ${ this.state.xIsNext ? "X" : "O" }`;
     }
 
     return (
