@@ -19,18 +19,20 @@ class Board extends React.Component {
     super(props);
 
     this.state = {
-      squares: Array(9).fill(null)
+      squares: Array(9).fill(null),
+      xIsNext: false
     }
   }
 
   handleClick(i) {
-    // Slice with no arguments returns a shallow copy of an array
     const squaresShallowCopy = this.state.squares.slice(); 
 
-    squaresShallowCopy[i] = "X";
+    squaresShallowCopy[i] = this.state.xIsNext ? "X" : "O";
 
-    // The array in state is overwritten by the shallow copy, I guess it's for immutability
-    this.setState({ squares: squaresShallowCopy }); 
+    this.setState({ 
+      squares: squaresShallowCopy,
+      xIsNext: !this.state.xIsNext
+    }); 
   }
 
   renderSquare(i) {
@@ -41,7 +43,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = `Next player: ${ this.state.xIsNext ? "X" : "O" }`;
 
     return (
       <div>
