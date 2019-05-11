@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css"
-
+import { computeTicTacToeBoardWinner } from "./Helpers/ComputeWinner";
 
 function Square(props) {
   return(
@@ -20,7 +20,8 @@ class Board extends React.Component {
 
     this.state = {
       squares: Array(9).fill(null),
-      xIsNext: false
+      xIsNext: false,
+      winner: null
     }
   }
 
@@ -29,9 +30,12 @@ class Board extends React.Component {
 
     squaresShallowCopy[i] = this.state.xIsNext ? "X" : "O";
 
+    let winner = computeTicTacToeBoardWinner(squaresShallowCopy);
+
     this.setState({ 
       squares: squaresShallowCopy,
-      xIsNext: !this.state.xIsNext
+      xIsNext: !this.state.xIsNext,
+      winner: winner
     }); 
   }
 
@@ -43,7 +47,13 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = `Next player: ${ this.state.xIsNext ? "X" : "O" }`;
+    const status = "";
+
+    if(this.state.winner) {
+      status = `And the winner is : ${ this.state.winner }`;
+    } else {
+     `Next player: ${ this.state.xIsNext ? "X" : "O" }`;
+    }
 
     return (
       <div>
