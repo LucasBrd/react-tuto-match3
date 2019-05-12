@@ -4,7 +4,7 @@ This is my solution to the React.js official tutorial
 
 ## Test it 
 
-TODO : Link to codepen 
+[Click to test](https://codepen.io/lucasbrd/pen/YbWBmK)
 
 ## Changelog
 
@@ -12,7 +12,8 @@ TODO : Link to codepen
 - Winning line is marked with green letters
 - Added a button for new game
 
-## React default README following ...
+
+## -- React default README --
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
