@@ -28,7 +28,6 @@ class Board extends React.Component {
   render() {
     return (
       <div>
-        <div className="status">{this.props.status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -59,11 +58,14 @@ class Game extends React.Component {
       }],
       xIsNext: true,
       winner: null,
-      winningLine: null
+      winningLine: null,
+      currentIndex: 0
     };
   }
 
   handleClick(i) {
+    if(this.state.winner) return;
+    
     const squaresShallowCopy = this.state.history[this.state.history.length - 1].squares.slice()
 
     if(!squaresShallowCopy[i]) {
@@ -84,15 +86,28 @@ class Game extends React.Component {
 
   isWinningCase(i) {
     if(this.state.winningLine) {
-      console.log(this.state.winningLine)
-      console.log(i)
-      console.log(this.state.winningLine.indexOf(i) > -1)
       if(this.state.winningLine.indexOf(i) > -1) {
         return true;
       }
     }
 
     return false;
+  }
+
+  jumpToHistoryIndex(index) {
+    let winningInformations = computeTicTacToeBoardWinner(this.state.history[index].squares);
+
+    this.setState({
+      currentIndex: index,
+      xIsNext: (index % 2) === 0,
+      history: this.state.history.slice(0, index + 1),
+      winner: winningInformations.winner,
+      winningLine: winningInformations.winningLine
+    });
+
+    console.log(this.state);
+
+    this.render();
   }
 
   render() {
@@ -109,6 +124,17 @@ class Game extends React.Component {
       status = `Next player: ${ xIsNext ? "X" : "O" }`;
     }
 
+    // Time travel history
+    let gameHistoryListToDisplay = this.state.history.map((historyElement, index) => {
+      const listElementDecription = index ? `Go to move ${index}` : `Go to start`;
+
+      return (
+        <li key={index}>
+          <button onClick={() => { this.jumpToHistoryIndex(index); }} >{listElementDecription}</button>
+        </li>
+      );
+    })
+
     return (
       <div className="game">
         <div className="game-board">
@@ -122,8 +148,8 @@ class Game extends React.Component {
           />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
+          <div>{status}</div>
+          <ol>{gameHistoryListToDisplay}</ol>
         </div>
       </div>
     );
