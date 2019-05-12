@@ -6,8 +6,8 @@ import { computeTicTacToeBoardWinner } from "./Helpers/ComputeWinner";
 function Square(props) {
   return(
     <button
-      className="square"
       onClick={props.onClick}
+      className={`square ${props.greenCase ? "green-text" : ""}`}
     >
       {props.value}
     </button>
@@ -15,51 +15,20 @@ function Square(props) {
 }
 
 class Board extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: false,
-      winner: null
-    }
-  }
-
-  handleClick(i) {
-    const squaresShallowCopy = this.state.squares.slice(); 
-
-    squaresShallowCopy[i] = this.state.xIsNext ? "X" : "O";
-
-    let winner = computeTicTacToeBoardWinner(squaresShallowCopy);
-
-    console.log(winner)
-
-    this.setState({ 
-      squares: squaresShallowCopy,
-      xIsNext: !this.state.xIsNext,
-      winner: winner
-    }); 
-  }
-
   renderSquare(i) {
+    let greenCase = this.props.isWinningCase(i) ? "green" : "";
+
     return <Square 
-      value={this.state.squares[i]}
-      onClick={() => this.handleClick(i)}
+      value={this.props.squares[i]}
+      onClick={() => this.props.handleClick(i)}
+      greenCase={greenCase}
     />;
   }
 
   render() {
-    let status = "";
-
-    if(this.state.winner) {
-      status = `And the winner is : ${ this.state.winner }`;
-    } else {
-      status = `Next player: ${ this.state.xIsNext ? "X" : "O" }`;
-    }
-
     return (
       <div>
-        <div className="status">{status}</div>
+        <div className="status">{this.props.status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -81,11 +50,76 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null)
+      }],
+      xIsNext: true,
+      winner: null,
+      winningLine: null
+    };
+  }
+
+  handleClick(i) {
+    const squaresShallowCopy = this.state.history[this.state.history.length - 1].squares.slice()
+
+    if(!squaresShallowCopy[i]) {
+      squaresShallowCopy[i] = this.state.xIsNext ? "X" : "O";
+    } else {
+      return;
+    }
+
+    let winningInformations = computeTicTacToeBoardWinner(squaresShallowCopy);
+
+    this.setState({ 
+      history: [...this.state.history, { squares: squaresShallowCopy }],
+      winner: winningInformations.winner,
+      xIsNext: !this.state.xIsNext,
+      winningLine: winningInformations.winningLine
+    }); 
+  }
+
+  isWinningCase(i) {
+    if(this.state.winningLine) {
+      console.log(this.state.winningLine)
+      console.log(i)
+      console.log(this.state.winningLine.indexOf(i) > -1)
+      if(this.state.winningLine.indexOf(i) > -1) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   render() {
+    let currentSquares = this.state.history[this.state.history.length - 1].squares.slice()
+
+    let status = "";
+
+    let xIsNext = this.state.xIsNext;
+    let winner = this.state.winner;
+
+    if(winner) {
+      status = `And the winner is : ${ winner }`;
+    } else {
+      status = `Next player: ${ xIsNext ? "X" : "O" }`;
+    }
+
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board 
+            handleClick={(i) => { this.handleClick(i); }}
+            isWinningCase={(i) => { return this.isWinningCase(i); }}
+            squares={currentSquares}
+            xIsNext={xIsNext}
+            winner={winner}
+            status={status}
+          />
         </div>
         <div className="game-info">
           <div>{/* status */}</div>

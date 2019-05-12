@@ -10,15 +10,23 @@ module.exports.computeTicTacToeBoardWinner = (arrayOfXAndO) => {
     [2, 4, 6]
   ];
 
+  let winningInformations = {
+    winner: null,
+    winningLine: null
+  };
+
   for(let line of lines) {
     let firstElement = arrayOfXAndO[line[0]];
     let secondElement = arrayOfXAndO[line[1]];
     let thirdElement = arrayOfXAndO[line[2]];
     
     if(firstElement && firstElement === secondElement && secondElement === thirdElement) {
-      return firstElement;
+      winningInformations.winner = firstElement;
+      winningInformations.winningLine = line;
+    
+      return winningInformations
     }
   }
 
-  return null;
+  return winningInformations;
 }
