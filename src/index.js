@@ -105,7 +105,17 @@ class Game extends React.Component {
       winningLine: winningInformations.winningLine
     });
 
-    console.log(this.state);
+    this.render();
+  }
+
+  resetGame() {
+    this.setState({
+      currentIndex: 0,
+      xIsNext: "X",
+      history: [{ squares: Array(9).fill(null) }],
+      winner: null,
+      winningLine: null
+    });
 
     this.render();
   }
@@ -137,19 +147,30 @@ class Game extends React.Component {
 
     return (
       <div className="game">
-        <div className="game-board">
-          <Board 
-            handleClick={(i) => { this.handleClick(i); }}
-            isWinningCase={(i) => { return this.isWinningCase(i); }}
-            squares={currentSquares}
-            xIsNext={xIsNext}
-            winner={winner}
-            status={status}
-          />
+        <div className="row">
+          <div>
+            <button 
+              onClick={() => { this.resetGame() }}
+            >
+              New game
+            </button>
+          </div>
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{gameHistoryListToDisplay}</ol>
+        <div className="row">
+          <div className="game-board">
+            <Board 
+              handleClick={(i) => { this.handleClick(i); }}
+              isWinningCase={(i) => { return this.isWinningCase(i); }}
+              squares={currentSquares}
+              xIsNext={xIsNext}
+              winner={winner}
+              status={status}
+            />
+          </div>
+          <div className="game-info">
+            <div>{status}</div>
+            <ol>{gameHistoryListToDisplay}</ol>
+          </div>
         </div>
       </div>
     );

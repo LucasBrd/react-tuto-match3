@@ -2,6 +2,16 @@
 
 This is my solution to the React.js official tutorial
 
+## Test it 
+
+TODO : Link to codepen 
+
+## Changelog
+
+- Better variables naming
+- Winning line is marked with green letters
+- Added a button for new game
+
 ## React default README following ...
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
